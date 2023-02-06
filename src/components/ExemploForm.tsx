@@ -1,6 +1,5 @@
 import React, { FormEvent } from 'react';
-import { useCities } from "../hooks/useCities";
-import { useStates } from "../hooks/useStates";
+import { useLocation } from "../hooks/useLocation";
 import CepLoader from "./CepLoader";
 import SelectCity from "./SelectCity";
 import SelectState from "./SelectState";
@@ -8,30 +7,33 @@ import SelectState from "./SelectState";
 type ExemploFormProps = {};
 
 const ExemploForm: React.FC<ExemploFormProps> = (props) => {
-  const [stateId, setStateId] = React.useState<number>();
-  const [cityId, setCityId] = React.useState<number>();
-
-  const states = useStates();
-  const cities = useCities(stateId);
+  const location = useLocation();
 
   const onSubmitForm = React.useCallback((ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
-    alert(`Estado: ${stateId}; Cidade: ${cityId}`);
-  }, [stateId, cityId]);
-
-  const onLoadUf = React.useCallback((uf: string) => {
-    console.log(uf);
-    if (!states)
-      return;
-    setStateId(states.find((state) => state.uf === uf)?.id);
-  }, [states]);
+    alert(`Estado: ${location.stateSelected?.name}; Cidade: ${location.citySelected?.name}`);
+  }, [location.stateSelected, location.citySelected]);
 
   return (
     <form onSubmit={onSubmitForm}>
       <div className="flex flex-col space-y-4">
-        <CepLoader onLoadUf={onLoadUf} loadButtonEnabled={states !== undefined} />
-        <SelectState states={states} stateId={stateId} setStateId={setStateId} />
-        <SelectCity cities={cities} cityId={cityId} setCityId={setCityId} />
+        <CepLoader
+          onLoadCep={location.loadForCep}
+          loadButtonEnabled={location.states !== undefined}
+        />
+
+        <SelectState
+          states={location.states}
+          stateSelected={location.stateSelected}
+          setStateSelected={location.setStateSelected}
+          disabled={location.isLoading}
+        />
+
+        <SelectCity
+          cities={location.cities}
+          citySelected={location.citySelected}
+          setCitySelected={location.setCitySelected}
+        />
 
         <button className="border border-white px-4 py-2">Enviar</button>
       </div>

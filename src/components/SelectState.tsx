@@ -3,24 +3,30 @@ import { State } from "../lib/types";
 
 type SelectStateProps = {
   states: State[] | undefined; // undefined = não carregado
-  stateId: number | undefined; // undefined = não selecionado
-  setStateId: (stateId: number | undefined) => void;
+  stateSelected: State | undefined; // undefined = não selecionado
+  setStateSelected: (state: State | undefined) => void;
+  disabled?: boolean;
 };
 
-const SelectState: React.FC<SelectStateProps> = ({ states, stateId, setStateId }) => {
+const SelectState: React.FC<SelectStateProps> = ({
+  states,
+  stateSelected,
+  setStateSelected,
+  disabled,
+}) => {
   return (
     <select
       name="stateId"
       className="text-slate-700 px-4 py-2"
-      disabled={states === undefined}
-      value={stateId ?? ''}
+      disabled={disabled || states === undefined}
+      value={stateSelected?.id ?? ''}
       onChange={(ev) => {
         const value = ev.currentTarget.value;
 
         if (value === '')
-          setStateId(undefined);
+          setStateSelected(undefined);
         else
-          setStateId(+value);
+          setStateSelected(states?.find((state) => state.id === +value));
       }}
     >
       <option value=""></option>

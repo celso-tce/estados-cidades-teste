@@ -2,21 +2,13 @@ import React from 'react';
 import { loadUfFromCep } from "../lib/loaders";
 
 type CepLoaderProps = {
-  onLoadUf: (uf: string) => void;
+  onLoadCep: (cep: string) => void;
   loadButtonEnabled: boolean; // caso true, ativa o botão de carregar cep
 };
 
-const CepLoader: React.FC<CepLoaderProps> = ({ onLoadUf, loadButtonEnabled }) => {
+const CepLoader: React.FC<CepLoaderProps> = ({ onLoadCep, loadButtonEnabled }) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = React.useState(false);
-
-  const onLoadCep = React.useCallback((cep: string) => {
-    setIsLoading(true);
-
-    loadUfFromCep(cep)
-      .then(onLoadUf)
-      .finally(() => setIsLoading(false));
-  }, [onLoadUf]);
 
   return (
     <div className="flex space-x-2">

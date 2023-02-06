@@ -3,24 +3,30 @@ import { City } from "../lib/types";
 
 type SelectCityProps = {
   cities: City[] | undefined; // undefined = lista carregando
-  cityId: number | undefined; // undefined = não selecionado
-  setCityId: (cityId: number | undefined) => void;
+  citySelected: City | undefined; // undefined = não selecionado
+  setCitySelected: (city: City | undefined) => void;
+  disabled?: boolean;
 };
 
-const SelectCity: React.FC<SelectCityProps> = ({ cities, cityId, setCityId }) => {
+const SelectCity: React.FC<SelectCityProps> = ({
+  cities,
+  citySelected,
+  setCitySelected,
+  disabled,
+}) => {
   return (
     <select
       name="cityId"
       className="text-slate-700 px-4 py-2"
-      disabled={cities === undefined}
-      value={cityId}
+      disabled={disabled || cities === undefined}
+      value={citySelected?.id ?? ''}
       onChange={(ev) => {
         const value = ev.currentTarget.value;
 
         if (value === '')
-          setCityId(undefined);
+          setCitySelected(undefined);
         else
-          setCityId(+value);
+          setCitySelected(cities?.find((city) => city.id === +value));
       }}
     >
       <option value=""></option>
