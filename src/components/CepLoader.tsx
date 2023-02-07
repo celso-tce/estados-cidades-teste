@@ -1,5 +1,5 @@
 import React from 'react';
-import { loadUfFromCep } from "../lib/loaders";
+import { loadViaCep } from "../lib/loaders";
 
 type CepLoaderProps = {
   onLoadCep: (cep: string) => void;
